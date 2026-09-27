@@ -41,51 +41,51 @@ The TheBrain MCP Server implements a sophisticated multi-layered architecture th
 
 ```mermaid
 graph TB
-    subgraph "AI Assistant Layer"
-        VS[VS Code]
-        Claude[Claude Desktop]
-        LLM[Other MCP Clients]
+    subgraph assistants["AI Assistant Layer"]
+        VS[🖥️ VS Code]
+        Claude[🤖 Claude Desktop]
+        LLM[🧩 Other MCP Clients]
     end
     
-    subgraph "MCP Protocol Layer"
-        MCP[MCP Protocol<br/>JSON-RPC 2.0]
-        Tools[Tools Interface]
-        Resources[Resources Interface]
+    subgraph protocol["MCP Protocol Layer"]
+        MCP[🔌 MCP Protocol<br/>JSON-RPC 2.0]
+        Tools[🛠️ Tools Interface]
+        Resources[📚 Resources Interface]
     end
     
-    subgraph "Ruby MCP Server"
-        Server[MCP Server<br/>main.rb]
-        Protocol[Protocol Handler<br/>mcp_protocol.rb]
+    subgraph serverLayer["Ruby MCP Server"]
+        Server[⚙️ MCP Server<br/>main.rb]
+        Protocol[🔄 Protocol Handler<br/>mcp_protocol.rb]
         
-        subgraph "Core Components"
-            Client[TheBrain Client<br/>thebrain_client.rb]
-            Cache[Memory Cache<br/>concurrent-ruby]
-            Config[Configuration<br/>dry-configurable]
-            Logger[Structured Logger<br/>dry-logger]
-            Errors[Error Handler<br/>errors.rb]
+        subgraph core["Core Components"]
+            Client[🔗 TheBrain Client<br/>thebrain_client.rb]
+            Cache[(🗃️ Memory Cache<br/>concurrent-ruby)]
+            Config[⚙️ Configuration<br/>dry-configurable]
+            Logger[📝 Structured Logger<br/>dry-logger]
+            Errors[⚠️ Error Handler<br/>errors.rb]
         end
         
-        subgraph "Tool Handlers"
-            Search[search_thoughts]
-            Get[get_thought]
-            Create[create_thought]
-            Update[update_thought]
-            Delete[delete_thought]
+        subgraph handlers["Tool Handlers"]
+            Search[🔎 search_thoughts]
+            Get[📖 get_thought]
+            Create[➕ create_thought]
+            Update[✏️ update_thought]
+            Delete[🗑️ delete_thought]
         end
     end
     
-    subgraph "TheBrain Ecosystem"
-        API[TheBrain API<br/>REST/HTTP]
-        Brain[TheBrain<br/>Knowledge Base]
-        Thoughts[Thoughts Network]
-        Links[Thought Links]
+    subgraph ecosystem["TheBrain Ecosystem"]
+        API[🌐 TheBrain API<br/>REST/HTTP]
+        Brain[(🧠 TheBrain<br/>Knowledge Base)]
+        Thoughts[💡 Thoughts Network]
+        Links[🔗 Thought Links]
     end
     
-    subgraph "Infrastructure"
-        HTTP[HTTP Client<br/>Faraday]
-        JSON[JSON Processing]
-        Auth[Bearer Token Auth]
-        Retry[Retry Logic]
+    subgraph infrastructure["Infrastructure"]
+        HTTP[🌐 HTTP Client<br/>Faraday]
+        JSON[📄 JSON Processing]
+        Auth[🔐 Bearer Token Auth]
+        Retry[🔁 Retry Logic]
     end
     
     %% Main Flow Connections
@@ -134,6 +134,23 @@ graph TB
     Protocol -->|"formats responses"| JSON
     Errors -->|"logs issues"| Logger
     Config -->|"environment vars"| Server
+
+    classDef process fill:#DCEBFA,stroke:#355C7D,color:#1E293B;
+    classDef data fill:#DDF2E1,stroke:#3F6B4F,color:#1E3324;
+    classDef external fill:#FBE4F0,stroke:#8E496D,color:#3F2434;
+    classDef failure fill:#F9DFDF,stroke:#8C3A3A,color:#401E1E;
+    class MCP,Tools,Resources,Server,Protocol,Client,Config,Logger,Search,Get,Create,Update,Delete,HTTP,Auth,Retry process;
+    class Cache,JSON,Brain,Thoughts,Links data;
+    class VS,Claude,LLM,API external;
+    class Errors failure;
+
+    style assistants fill:#FBE4F0,stroke:#8E496D,color:#3F2434;
+    style protocol fill:#DCEBFA,stroke:#355C7D,color:#1E293B;
+    style serverLayer fill:#DCEBFA,stroke:#355C7D,color:#1E293B;
+    style core fill:#EAF3FB,stroke:#56738D,color:#1E293B;
+    style handlers fill:#EAF3FB,stroke:#56738D,color:#1E293B;
+    style ecosystem fill:#DDF2E1,stroke:#3F6B4F,color:#1E3324;
+    style infrastructure fill:#EAF3FB,stroke:#56738D,color:#1E293B;
 ```
 
 <details>
@@ -142,6 +159,7 @@ graph TB
 ```mermaid
 classDiagram
     class MCPServer {
+      <<⚙️ server>>
         +config: Configuration
         +logger: Logger
         +client: ThebrainClient
@@ -151,6 +169,7 @@ classDiagram
     }
     
     class ThebrainClient {
+      <<🔗 API client>>
         +base_url: String
         +api_key: String
         +brain_id: String
@@ -163,6 +182,7 @@ classDiagram
     }
     
     class MCPProtocol {
+      <<🔌 protocol>>
         +handle_initialize()
         +handle_tools_list()
         +handle_tools_call()
@@ -172,6 +192,7 @@ classDiagram
     }
     
     class Configuration {
+      <<⚙️ configuration>>
         +api_url: String
         +api_key: String
         +brain_id: String
@@ -181,6 +202,7 @@ classDiagram
     }
     
     class ErrorHandler {
+      <<⚠️ error handler>>
         +handle_api_error()
         +handle_network_error()
         +handle_validation_error()
@@ -188,11 +210,22 @@ classDiagram
     }
     
     class Cache {
+      <<🗃️ cache>>
         +get(key)
         +set(key, value, ttl)
         +invalidate(key)
         +clear()
     }
+
+    classDef service fill:#DCEBFA,stroke:#355C7D,color:#1E293B
+    classDef data fill:#DDF2E1,stroke:#3F6B4F,color:#1E3324
+
+    class MCPServer service
+    class ThebrainClient service
+    class MCPProtocol service
+    class Configuration service
+    class ErrorHandler service
+    class Cache data
     
     MCPServer "1" --> "1" ThebrainClient
     MCPServer "1" --> "1" MCPProtocol
@@ -209,6 +242,24 @@ classDiagram
 
 ```mermaid
 stateDiagram-v2
+  state "🚀 Initializing" as Initializing
+  state "🔗 Connected" as Connected
+  state "🔐 Authenticating" as Authenticating
+  state "✅ Ready" as Ready
+  state "⚙️ Processing" as Processing
+  state "📚 Browsing" as Browsing
+  state "🔎 Searching" as Searching
+  state "📖 Reading" as Reading
+  state "➕ Creating" as Creating
+  state "✏️ Updating" as Updating
+  state "🗑️ Deleting" as Deleting
+  state "🗃️ Caching" as Caching
+  state "🔍 Validating" as Validating
+  state "❓ Confirming" as Confirming
+  state "📋 Listing" as Listing
+  state "📥 Fetching" as Fetching
+  state "⚠️ Error" as Error
+
     [*] --> Initializing
     Initializing --> Connected: MCP handshake complete
     Initializing --> Error: Connection failed
@@ -244,6 +295,11 @@ stateDiagram-v2
     Error --> Ready: Error handled
     Ready --> [*]: Connection closed
     Error --> [*]: Fatal error
+
+    classDef process fill:#DCEBFA,stroke:#355C7D,color:#1E293B
+    classDef failure fill:#F9DFDF,stroke:#8C3A3A,color:#401E1E
+    class Initializing,Connected,Authenticating,Ready,Processing,Browsing,Searching,Reading,Creating,Updating,Deleting,Caching,Validating,Confirming,Listing,Fetching process
+    class Error failure
 ```
 
 </details>
@@ -253,51 +309,51 @@ stateDiagram-v2
 
 ```mermaid
 mindmap
-  root((TheBrain MCP Server))
-    AI Integration
-      Model Context Protocol
-        JSON-RPC 2.0
-        Tool Calls
-        Resource Access
-        Standard Transport
-      AI Assistants
-        Claude Desktop
-        VS Code
-        Custom Clients
-        LLM Applications
-    Knowledge Management
-      TheBrain Platform
-        Visual Networks
-        Thought Relationships
-        Dynamic Connections
-        Personal Knowledge
-      Operations
-        Search & Discovery
-        CRUD Operations
-        Relationship Management
-        Content Organization
-    Technical Architecture
-      Ruby Implementation
-        Modular Design
-        Error Handling
-        Performance Optimization
-        Type Safety
-      Infrastructure
-        HTTP Client
-        Caching Layer
-        Authentication
-        Logging System
-    Development Experience
-      Testing Suite
-        RSpec Framework
-        Test Coverage
-        Mock Integration
-        End-to-End Tests
-      Code Quality
-        RuboCop Standards
-        Documentation
-        Type Checking
-        Continuous Integration
+  root((🧠 TheBrain MCP Server))
+    🤝 AI Integration
+      🔌 Model Context Protocol
+        📄 JSON-RPC 2.0
+        🛠️ Tool Calls
+        📚 Resource Access
+        🔄 Standard Transport
+      🤖 AI Assistants
+        💬 Claude Desktop
+        🖥️ VS Code
+        🧩 Custom Clients
+        ✨ LLM Applications
+    🗂️ Knowledge Management
+      🧠 TheBrain Platform
+        🕸️ Visual Networks
+        🔗 Thought Relationships
+        🔀 Dynamic Connections
+        💭 Personal Knowledge
+      ⚙️ Operations
+        🔎 Search & Discovery
+        🧰 CRUD Operations
+        🧷 Relationship Management
+        🗃️ Content Organization
+    🏗️ Technical Architecture
+      💎 Ruby Implementation
+        🧱 Modular Design
+        ⚠️ Error Handling
+        🚀 Performance Optimization
+        🛡️ Type Safety
+      🏢 Infrastructure
+        🌐 HTTP Client
+        🗃️ Caching Layer
+        🔐 Authentication
+        📝 Logging System
+    🧑‍💻 Development Experience
+      🧪 Testing Suite
+        💎 RSpec Framework
+        📊 Test Coverage
+        🎭 Mock Integration
+        🔄 End-to-End Tests
+      ✅ Code Quality
+        📏 RuboCop Standards
+        📖 Documentation
+        🔍 Type Checking
+        ⚙️ Continuous Integration
 ```
 
 </details>
