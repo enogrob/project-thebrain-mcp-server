@@ -2,7 +2,7 @@
 
 [Homepage](https://github.com/enogrob/ruby-thebrain-mcp-server)
 
-![project image](images/project.png)
+![project image](images/project-thebrain-mcp-server-infographic.webp)
 
 ## Contents
 
@@ -25,26 +25,16 @@ TheBrain is a powerful visual knowledge management platform trusted by major org
 
 This project represents a significant step forward in making personal knowledge management systems truly intelligent and interactive. By implementing the Model Context Protocol specification, it enables bidirectional communication between AI models and TheBrain, allowing for sophisticated operations like semantic search, thought creation, relationship management, and content analysis. The server's modular Ruby architecture ensures reliability, performance, and extensibility while maintaining the security and privacy standards expected for personal knowledge management systems.
 
-<br/>
-
-<div align="center">
-  <a href="https://enogrob.github.io/thebrain/mcp/2025/05/15/thebrain-mcp-server.html" target="_blank">
-    <img src="images/thebrain-mcp-server.png" alt="The Vision: Making TheBrain Smarter with a MCP Server">
-  </a>
-</div>
-
-<br/>
-
 ### Architecture
 
 The TheBrain MCP Server implements a sophisticated multi-layered architecture that seamlessly connects AI assistants with TheBrain's knowledge management ecosystem through the standardized Model Context Protocol.
 
 ```mermaid
-graph TB
+flowchart TD
     subgraph assistants["AI Assistant Layer"]
-        VS[🖥️ VS Code]
-        Claude[🤖 Claude Desktop]
-        LLM[🧩 Other MCP Clients]
+    VS([🖥️ VS Code])
+    Claude([🤖 Claude Desktop])
+    LLM([🧩 Other MCP Clients])
     end
     
     subgraph protocol["MCP Protocol Layer"]
@@ -75,7 +65,7 @@ graph TB
     end
     
     subgraph ecosystem["TheBrain Ecosystem"]
-        API[🌐 TheBrain API<br/>REST/HTTP]
+        API([🌐 TheBrain API<br/>REST/HTTP])
         Brain[(🧠 TheBrain<br/>Knowledge Base)]
         Thoughts[💡 Thoughts Network]
         Links[🔗 Thought Links]
@@ -135,22 +125,6 @@ graph TB
     Errors -->|"logs issues"| Logger
     Config -->|"environment vars"| Server
 
-    classDef process fill:#DCEBFA,stroke:#355C7D,color:#1E293B;
-    classDef data fill:#DDF2E1,stroke:#3F6B4F,color:#1E3324;
-    classDef external fill:#FBE4F0,stroke:#8E496D,color:#3F2434;
-    classDef failure fill:#F9DFDF,stroke:#8C3A3A,color:#401E1E;
-    class MCP,Tools,Resources,Server,Protocol,Client,Config,Logger,Search,Get,Create,Update,Delete,HTTP,Auth,Retry process;
-    class Cache,JSON,Brain,Thoughts,Links data;
-    class VS,Claude,LLM,API external;
-    class Errors failure;
-
-    style assistants fill:#FBE4F0,stroke:#8E496D,color:#3F2434;
-    style protocol fill:#DCEBFA,stroke:#355C7D,color:#1E293B;
-    style serverLayer fill:#DCEBFA,stroke:#355C7D,color:#1E293B;
-    style core fill:#EAF3FB,stroke:#56738D,color:#1E293B;
-    style handlers fill:#EAF3FB,stroke:#56738D,color:#1E293B;
-    style ecosystem fill:#DDF2E1,stroke:#3F6B4F,color:#1E3324;
-    style infrastructure fill:#EAF3FB,stroke:#56738D,color:#1E293B;
 ```
 
 <details>
@@ -158,8 +132,8 @@ graph TB
 
 ```mermaid
 classDiagram
-    class MCPServer {
-      <<⚙️ server>>
+    class "⚙️ MCP Server" as MCPServer {
+      <<server>>
         +config: Configuration
         +logger: Logger
         +client: ThebrainClient
@@ -168,8 +142,8 @@ classDiagram
         +handle_tool_call()
     }
     
-    class ThebrainClient {
-      <<🔗 API client>>
+    class "🔗 TheBrain Client" as ThebrainClient {
+      <<API client>>
         +base_url: String
         +api_key: String
         +brain_id: String
@@ -181,8 +155,8 @@ classDiagram
         +delete_thought(id)
     }
     
-    class MCPProtocol {
-      <<🔌 protocol>>
+    class "🔌 MCP Protocol" as MCPProtocol {
+      <<protocol>>
         +handle_initialize()
         +handle_tools_list()
         +handle_tools_call()
@@ -191,8 +165,8 @@ classDiagram
         +format_response()
     }
     
-    class Configuration {
-      <<⚙️ configuration>>
+    class "⚙️ Configuration" as Configuration {
+      <<configuration>>
         +api_url: String
         +api_key: String
         +brain_id: String
@@ -201,32 +175,22 @@ classDiagram
         +validate()
     }
     
-    class ErrorHandler {
-      <<⚠️ error handler>>
+    class "⚠️ Error Handler" as ErrorHandler {
+      <<error handler>>
         +handle_api_error()
         +handle_network_error()
         +handle_validation_error()
         +format_error_response()
     }
     
-    class Cache {
-      <<🗃️ cache>>
+    class "🗃️ Cache" as Cache {
+      <<cache>>
         +get(key)
         +set(key, value, ttl)
         +invalidate(key)
         +clear()
     }
 
-    classDef service fill:#DCEBFA,stroke:#355C7D,color:#1E293B
-    classDef data fill:#DDF2E1,stroke:#3F6B4F,color:#1E3324
-
-    class MCPServer service
-    class ThebrainClient service
-    class MCPProtocol service
-    class Configuration service
-    class ErrorHandler service
-    class Cache data
-    
     MCPServer "1" --> "1" ThebrainClient
     MCPServer "1" --> "1" MCPProtocol
     MCPServer "1" --> "1" Configuration
