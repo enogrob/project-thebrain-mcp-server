@@ -132,7 +132,7 @@ flowchart TD
 
 ```mermaid
 classDiagram
-    class "⚙️ MCP Server" as MCPServer {
+    class MCPServer["⚙️ MCP Server"] {
       <<server>>
         +config: Configuration
         +logger: Logger
@@ -142,7 +142,7 @@ classDiagram
         +handle_tool_call()
     }
     
-    class "🔗 TheBrain Client" as ThebrainClient {
+    class ThebrainClient["🔗 TheBrain Client"] {
       <<API client>>
         +base_url: String
         +api_key: String
@@ -155,7 +155,7 @@ classDiagram
         +delete_thought(id)
     }
     
-    class "🔌 MCP Protocol" as MCPProtocol {
+    class MCPProtocol["🔌 MCP Protocol"] {
       <<protocol>>
         +handle_initialize()
         +handle_tools_list()
@@ -165,7 +165,7 @@ classDiagram
         +format_response()
     }
     
-    class "⚙️ Configuration" as Configuration {
+    class Configuration["⚙️ Configuration"] {
       <<configuration>>
         +api_url: String
         +api_key: String
@@ -175,7 +175,7 @@ classDiagram
         +validate()
     }
     
-    class "⚠️ Error Handler" as ErrorHandler {
+    class ErrorHandler["⚠️ Error Handler"] {
       <<error handler>>
         +handle_api_error()
         +handle_network_error()
@@ -183,7 +183,7 @@ classDiagram
         +format_error_response()
     }
     
-    class "🗃️ Cache" as Cache {
+    class Cache["🗃️ Cache"] {
       <<cache>>
         +get(key)
         +set(key, value, ttl)
@@ -218,7 +218,7 @@ stateDiagram-v2
   state "✏️ Updating" as Updating
   state "🗑️ Deleting" as Deleting
   state "🗃️ Caching" as Caching
-  state "🔍 Validating" as Validating
+  state "🧪 Validating" as Validating
   state "❓ Confirming" as Confirming
   state "📋 Listing" as Listing
   state "📥 Fetching" as Fetching
